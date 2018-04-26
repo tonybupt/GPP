@@ -5,6 +5,7 @@ import re
 
 startUrl = "http://mirrors.aliyun.com/pypi/simple/"
 downloadBaseUrl = "http://mirrors.aliyun.com/pypi/"
+localPath = "D:\\NUSIC\\"
 proxies = {
     "http": "http://localhost:8899",
 }
@@ -12,12 +13,12 @@ proxies = {
 
 def download(file, url):
     r = requests.get(url, proxies=proxies)
-    with open(file, "wb") as f:
+    with open(localPath+file, "wb") as f:
         f.write(r.content)
     f.close()
 
 
-def compareVersion(version1="0.1.2", version2="0.1.17"):
+def compareVersion(version1, version2):
     version1s = version1.split('.')
     version2s = version2.split('.')
 
@@ -63,8 +64,8 @@ def getSingle(singleUrl):
         url = downloadBaseUrl + _items.split('\">')[0]
         fileName = _items.split('\">')[1]
 
-        print url
-        print fileName
+        # print url
+        # print fileName
 
         # tar.gz与平台无关
         fileType = fileName.split('.')[-1]
@@ -83,7 +84,6 @@ def getSingle(singleUrl):
         fileNames = fileName.split('-')
 
         pyVersion = fileNames[2]
-        print pyVersion
         if pyVersion == "cp27" or pyVersion == "py2":
             _key = _key + "py27"
         elif pyVersion == "cp36" or pyVersion == "py3" or pyVersion == r'py2.py3':
@@ -109,8 +109,6 @@ def getSingle(singleUrl):
 
         _key = _key + fileType
 
-        print _key
-
         fileVersion = fileNames[1]
         if not fileUrls[_key]:
             fileUrls[_key] = [fileName, url]
@@ -120,7 +118,6 @@ def getSingle(singleUrl):
     for fileUrl in fileUrls.values():
         if not fileUrl:
             continue
-        # pass
         print fileUrl[0]
         print fileUrl[1]
         download(fileUrl[0],fileUrl[1])
@@ -135,5 +132,6 @@ def getAll():
 
 
 if __name__=="__main__":
-    getSingle("http://mirrors.aliyun.com/pypi/simple/cffi/")
+    getSingle("http://mirrors.aliyun.com/pypi/simple/djangorestframework/")
     # download("cffi-1.2.0-cp27-none-win_amd64.whl", "http://mirrors.aliyun.com/pypi/packages/2c/9f/ee334eafc2f1200e8c6978dd77ec3d32feebf287f1102d941feb1841d69c/cffi-1.2.0-cp27-none-win_amd64.whl#md5=9853d7581dc836c474d07712c19c6d1a")
+    # download("http://mirrors.aliyun.com/pypi/packages/90/30/ad1148098ff0c375df2a30cc4494ed953cf7551fc1ecec30fc951c712d20/djangorestframework")
